@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Home from './components/Home'
 import TextCategory from './components/TextCategory'
 import FindWords from './components/FindWords'
+import FindIP from './components/FindIP'
 
 export default function App() {
   const [view, setView] = useState('home')
@@ -15,8 +16,9 @@ export default function App() {
       </header>
       <main className="main">
         {view === 'home' && <Home onOpenCategory={() => navigate('text')} />}
-        {view === 'text' && <TextCategory onFind={() => navigate('find')} onBack={() => navigate('home')} />}
+        {view === 'text' && <TextCategory onFind={() => navigate('find')} onIP={() => navigate('ip')} onBack={() => navigate('home')} />}
         {view === 'find' && <FindWords onBack={() => navigate('text')} />}
+        {view === 'ip' && <FindIP onBack={() => navigate('text')} />}
       </main>
     </div>
   )
