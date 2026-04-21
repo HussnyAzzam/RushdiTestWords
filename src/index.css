@@ -17,4 +17,10 @@ button[aria-disabled], button:disabled { opacity: 0.6; cursor: default; }
 .message { color: #b53131; }
 .back { background: transparent; color: #2b6cb0; padding: 0; margin-bottom: 8px; border: none; cursor: pointer; }
 mark { background: #ffea8a; }
+.units-converter { background: white; padding: 16px; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
+.control-group { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.control-group label { font-weight: 500; font-size: 14px; }
+.control-group select, .control-group input { padding: 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px; }
+.swap-btn { margin-top: 12px; background: #5a7b9a; padding: 10px 16px; }
+.swap-btn:hover { background: #476583; }
 @media (max-width: 600px) { .criteria-row { flex-direction: column; align-items: stretch; } }
