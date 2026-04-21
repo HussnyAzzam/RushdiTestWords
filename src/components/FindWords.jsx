@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import words from '../data/dictionary.json'
+import oxfordDictionary from '../data/Oxford-Dictionary.json'
 
 const MATCH_TYPES = [
   { value: 'starts', label: 'words that start with' },
   { value: 'ends', label: 'words that end with' },
   { value: 'contains', label: 'words that contain' }
 ]
+
+// Extract words from Oxford Dictionary
+const words = oxfordDictionary.map(entry => entry.word)
 
 function createEmptyRow(id) {
   return { id, op: 'AND', type: 'contains', value: '' }
@@ -15,12 +18,14 @@ export default function FindWords({ onBack }) {
   const [criteria, setCriteria] = useState([createEmptyRow(1)])
   const [results, setResults] = useState([])
   const [message, setMessage] = useState('')
+  const [minLength, setMinLength] = useState('')
+  const [maxLength, setMaxLength] = useState('')
 
   const addRow = () => setCriteria(c => [...c, createEmptyRow(Date.now())])
   const removeRow = (id) => setCriteria(c => c.filter(r => r.id !== id))
   const updateRow = (id, patch) => setCriteria(c => c.map(r => r.id === id ? {...r, ...patch} : r))
-  const clearAll = () => { setCriteria([createEmptyRow(1)]); setResults([]); setMessage('') }
-  const exampleFill = () => setCriteria([ { id:1, op:'AND', type:'starts', value:'a' }, { id:2, op:'OR', type:'contains', value:'an' } ])
+  const clearAll = () => { setCriteria([createEmptyRow(1)]); setResults([]); setMessage(''); setMinLength(''); setMaxLength('') }
+  const exampleFill = () => { setCriteria([ { id:1, op:'AND', type:'starts', value:'a' }, { id:2, op:'OR', type:'contains', value:'an' } ]); setMinLength(''); setMaxLength('') }
 
   const runSearch = () => {
     const valid = criteria.filter(c => c.value && c.value.trim().length > 0)
@@ -48,7 +53,13 @@ export default function FindWords({ onBack }) {
       }
     })
 
-    setResults([...resultSet].sort((a,b) => a.localeCompare(b)))
+    // Apply word length filters
+    let finalResults = [...resultSet]
+    const min = minLength ? parseInt(minLength) : 0
+    const max = maxLength ? parseInt(maxLength) : Infinity
+    finalResults = finalResults.filter(w => w.length >= min && w.length <= max)
+
+    setResults(finalResults.sort((a,b) => a.localeCompare(b)))
   }
 
   const highlightWord = (word) => {
@@ -94,6 +105,15 @@ export default function FindWords({ onBack }) {
             )}
           </div>
         ))}
+      </div>
+
+      <div className="filter-group">
+        <label>Filter by Word Length:</label>
+        <div className="length-inputs">
+          <input type="number" placeholder="Min" min="0" value={minLength} onChange={e => setMinLength(e.target.value)} />
+          <span>to</span>
+          <input type="number" placeholder="Max" min="0" value={maxLength} onChange={e => setMaxLength(e.target.value)} />
+        </div>
       </div>
 
       <div className="controls">
