@@ -4,8 +4,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Ultimate Tools Hub</title>
-    <script type="module" crossorigin src="./assets/index-DYvQj-4I.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-7ZNh9b8_.css">
+    <script>
+      // GitHub Pages SPA redirect: restore the path after 404 redirect
+      const redirect = sessionStorage.getItem('redirect')
+      if (redirect) {
+        sessionStorage.removeItem('redirect')
+        window.history.replaceState(null, '', redirect)
+      }
+    </script>
+    <script type="module" crossorigin src="./assets/index-yJmzrBtX.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DPgbfq15.css">
   </head>
   <body>
     <div id="root"></div>
