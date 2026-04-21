@@ -139,28 +139,41 @@ export default function YouTubePlayer({ onBack }) {
     return `${m}:${s.toString().padStart(2, '0')}`
   }
 
+  // resume playback when returning to the app / screen wakes
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (!progressBarRef.current || (!isDraggingStart && !isDraggingEnd)) return
-      const rect = progressBarRef.current.getBoundingClientRect()
-      const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
-      const newTime = percent * videoDuration
-      if (isDraggingStart) {
-        setStartTime(Math.min(newTime, endTime))
-      } else if (isDraggingEnd) {
-        setEndTime(Math.max(newTime, startTime))
+    const handleVisibilityChange = () => {
+      if (!document.hidden && isPlaying && playerRef.current) {
+        try { playerRef.current.playVideo() } catch { /* ignore */ }
       }
     }
-    const handleMouseUp = () => {
-      setIsDraggingStart(false)
-      setIsDraggingEnd(false)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [isPlaying])
+
+  useEffect(() => {
+    const getEventPos = (e) => e.touches ? e.touches[0].clientX : e.clientX
+
+    const handleMove = (e) => {
+      if (!progressBarRef.current || (!isDraggingStart && !isDraggingEnd)) return
+      e.preventDefault()
+      const rect = progressBarRef.current.getBoundingClientRect()
+      const percent = Math.max(0, Math.min(1, (getEventPos(e) - rect.left) / rect.width))
+      const newTime = percent * videoDuration
+      if (isDraggingStart) setStartTime(Math.min(newTime, endTime))
+      else if (isDraggingEnd) setEndTime(Math.max(newTime, startTime))
     }
+    const handleUp = () => { setIsDraggingStart(false); setIsDraggingEnd(false) }
+
     if (isDraggingStart || isDraggingEnd) {
-      window.addEventListener('mousemove', handleMouseMove)
-      window.addEventListener('mouseup', handleMouseUp)
+      window.addEventListener('mousemove', handleMove)
+      window.addEventListener('mouseup', handleUp)
+      window.addEventListener('touchmove', handleMove, { passive: false })
+      window.addEventListener('touchend', handleUp)
       return () => {
-        window.removeEventListener('mousemove', handleMouseMove)
-        window.removeEventListener('mouseup', handleMouseUp)
+        window.removeEventListener('mousemove', handleMove)
+        window.removeEventListener('mouseup', handleUp)
+        window.removeEventListener('touchmove', handleMove)
+        window.removeEventListener('touchend', handleUp)
       }
     }
   }, [isDraggingStart, isDraggingEnd, videoDuration, startTime, endTime])
@@ -199,8 +212,12 @@ export default function YouTubePlayer({ onBack }) {
               <div className="progress-bar-background">
                 <div className="progress-selection" style={{ left: `${startPercent}%`, right: `${100 - endPercent}%` }} />
                 <div className="progress-current" style={{ left: `${currentPercent}%` }} />
-                <div className="progress-handle start-handle" style={{ left: `${startPercent}%` }} onMouseDown={() => setIsDraggingStart(true)} />
-                <div className="progress-handle end-handle" style={{ left: `${endPercent}%` }} onMouseDown={() => setIsDraggingEnd(true)} />
+                <div className="progress-handle start-handle" style={{ left: `${startPercent}%` }}
+                  onMouseDown={() => setIsDraggingStart(true)}
+                  onTouchStart={(e) => { e.preventDefault(); setIsDraggingStart(true) }} />
+                <div className="progress-handle end-handle" style={{ left: `${endPercent}%` }}
+                  onMouseDown={() => setIsDraggingEnd(true)}
+                  onTouchStart={(e) => { e.preventDefault(); setIsDraggingEnd(true) }} />
               </div>
             </div>
             <div className="time-display">
@@ -212,12 +229,16 @@ export default function YouTubePlayer({ onBack }) {
 
           <div className="time-inputs">
             <div className="control-group">
-              <label>Start Time:</label>
-              <input type="number" min="0" value={Math.floor(startTime)} onChange={(e) => setStartTime(Math.min(parseFloat(e.target.value) || 0, endTime))} />
+              <label>Start Time: {formatTime(startTime)}</label>
+              <input type="range" min="0" max={videoDuration} step="1" value={startTime}
+                onChange={(e) => setStartTime(Math.min(parseFloat(e.target.value), endTime))}
+                style={{ width: '100%' }} />
             </div>
             <div className="control-group">
-              <label>End Time:</label>
-              <input type="number" min="0" value={Math.floor(endTime)} onChange={(e) => setEndTime(Math.max(parseFloat(e.target.value) || 0, startTime))} />
+              <label>End Time: {formatTime(endTime)}</label>
+              <input type="range" min="0" max={videoDuration} step="1" value={endTime}
+                onChange={(e) => setEndTime(Math.max(parseFloat(e.target.value), startTime))}
+                style={{ width: '100%' }} />
             </div>
             <div className="control-group">
               <label>Loop Count:</label>
