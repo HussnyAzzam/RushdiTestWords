@@ -4,6 +4,7 @@ import TextCategory from './components/TextCategory'
 import FindWords from './components/FindWords'
 import FindIP from './components/FindIP'
 import UnitsConverter from './components/UnitsConverter'
+import YouTubePlayer from './components/YouTubePlayer'
 
 export default function App() {
   const [view, setView] = useState('home')
@@ -16,11 +17,12 @@ export default function App() {
         <h1>The Ultimate Tools Hub</h1>
       </header>
       <main className="main">
-        {view === 'home' && <Home onOpenCategory={() => navigate('text')} onOpenIP={() => navigate('ip')} onOpenUnits={() => navigate('units')} />}
+        {view === 'home' && <Home onOpenCategory={() => navigate('text')} onOpenIP={() => navigate('ip')} onOpenUnits={() => navigate('units')} onOpenYouTube={() => navigate('youtube')} />}
         {view === 'text' && <TextCategory onFind={() => navigate('find')} onBack={() => navigate('home')} />}
         {view === 'find' && <FindWords onBack={() => navigate('text')} />}
         {view === 'ip' && <FindIP onBack={() => navigate('home')} />}
         {view === 'units' && <UnitsConverter onBack={() => navigate('home')} />}
+        {view === 'youtube' && <YouTubePlayer onBack={() => navigate('home')} />}
       </main>
     </div>
   )
