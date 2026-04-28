@@ -1,26 +1,55 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-export default function Home({ onOpenCategory, onOpenIP, onOpenUnits, onOpenYouTube }) {
+export default function Home({ onOpenCategory, onOpenIP, onOpenUnits, onOpenYouTube, onOpenTextShare }) {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const pin = params.get('textshare')
+    if (pin) {
+      // Wipe the ?textshare= from the browser history BEFORE navigating
+      // so that pressing Back / clicking logo returns to clean "/"
+      window.history.replaceState({}, '', '/')
+      navigate('/textshare?textshare=' + encodeURIComponent(pin), { replace: true })
+    }
+  }, [navigate])
+
   return (
-    <div className="home">
-      <h2>Categories</h2>
-      <div style={{ display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
-        <div className="category-card" onClick={onOpenCategory} role="button" tabIndex={0} onKeyDown={(e)=>{ if(e.key==='Enter') onOpenCategory() }}>
-          <h3>Text Tools</h3>
-          <p>Find words by letters using simple filters.</p>
-        </div>
-        <div className="category-card" onClick={onOpenIP} role="button" tabIndex={0} onKeyDown={(e)=>{ if(e.key==='Enter') onOpenIP() }}>
-          <h3>What is my IP?</h3>
-          <p>Check your public IP address instantly.</p>
-        </div>
-        <div className="category-card" onClick={onOpenUnits} role="button" tabIndex={0} onKeyDown={(e)=>{ if(e.key==='Enter') onOpenUnits() }}>
-          <h3>Units Converter</h3>
-          <p>Convert between different units of measurement.</p>
-        </div>
-        <div className="category-card" onClick={onOpenYouTube} role="button" tabIndex={0} onKeyDown={(e)=>{ if(e.key==='Enter') onOpenYouTube() }}>
-          <h3>YouTube Player</h3>
-          <p>Play YouTube videos with custom start/end times and looping.</p>
-        </div>
+    <div className="home-container">
+      <h1>🛠️ Super Tools</h1>
+      <p>Select a tool to begin</p>
+      
+      <div className="tools-grid">
+        <button className="tool-button" onClick={onOpenYouTube}>
+          <div className="tool-icon">▶️</div>
+          <div className="tool-name">YouTube Player</div>
+          <div className="tool-desc">Video with custom looping</div>
+        </button>
+
+        <button className="tool-button" onClick={onOpenTextShare}>
+          <div className="tool-icon">📤</div>
+          <div className="tool-name">Text Share</div>
+          <div className="tool-desc">Secure encrypted sharing</div>
+        </button>
+
+        <button className="tool-button" onClick={onOpenCategory}>
+          <div className="tool-icon">📝</div>
+          <div className="tool-name">Text Tools</div>
+          <div className="tool-desc">Search words by letters</div>
+        </button>
+
+        <button className="tool-button" onClick={onOpenIP}>
+          <div className="tool-icon">🌐</div>
+          <div className="tool-name">Find IP</div>
+          <div className="tool-desc">Get IP information</div>
+        </button>
+
+        <button className="tool-button" onClick={onOpenUnits}>
+          <div className="tool-icon">📏</div>
+          <div className="tool-name">Unit Converter</div>
+          <div className="tool-desc">Convert units easily</div>
+        </button>
       </div>
     </div>
   )
