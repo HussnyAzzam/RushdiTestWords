@@ -6,7 +6,7 @@ import FindWords from './components/FindWords'
 import FindIP from './components/FindIP'
 import UnitsConverter from './components/UnitsConverter'
 import YouTubePlayer from './components/YouTubePlayer'
-import TextShare from './components/TextShare'
+import TextShareNew from './components/TextShareNew'
 import './styles/App.css'
 
 function AppRoutes() {
@@ -54,7 +54,7 @@ function AppRoutes() {
           <Route path="/ip" element={<FindIP onBack={() => navigate('/')} />} />
           <Route path="/units" element={<UnitsConverter onBack={() => navigate('/')} />} />
           <Route path="/youtube" element={<YouTubePlayer onBack={() => navigate('/')} />} />
-          <Route path="/textshare" element={<TextShare onBack={() => navigate('/')} />} />
+          <Route path="/textshare" element={<TextShareNew onBack={() => navigate('/')} />} />
         </Routes>
       </main>
     </div>
