@@ -171,8 +171,9 @@ export class TextShareSupabaseService {
 
       if (error) throw error
 
-      // Generate share URL
-      const shareUrl = `${window.location.origin}/#/textshare?pin=${pin}`
+      // Generate share URL with correct base path
+      const baseUrl = window.location.origin + window.location.pathname.replace(/\/$/, '')
+      const shareUrl = `${baseUrl}/#/textshare?pin=${pin}`
       
       return {
         success: true,
