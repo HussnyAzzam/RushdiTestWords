@@ -4,10 +4,12 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 if (!supabaseUrl || !supabaseKey) {
-  console.error('Missing Supabase credentials in .env.local')
+  console.warn('Missing Supabase credentials - TextShare feature will be unavailable')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+export const supabase = (supabaseUrl && supabaseKey)
+  ? createClient(supabaseUrl, supabaseKey)
+  : null
 
 // Web Crypto API Service for client-side encryption/decryption
 export class CryptoService {
