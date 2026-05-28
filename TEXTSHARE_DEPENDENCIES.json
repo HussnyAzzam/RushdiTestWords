@@ -1,0 +1,63 @@
+{
+  "name": "textshare-dependencies",
+  "version": "1.0.0",
+  "description": "Required dependencies for TextShare tool",
+  "dependencies": {
+    "tweetnacl": "^1.0.3",
+    "tweetnacl-util": "^0.15.1",
+    "docx": "^8.10.0",
+    "qrcode": "^1.5.3"
+  },
+  "devDependencies": {},
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
+  },
+  "scripts": {
+    "install:textshare": "npm install tweetnacl tweetnacl-util docx qrcode"
+  },
+  "keywords": [
+    "textshare",
+    "encryption",
+    "qrcode",
+    "secure-messaging",
+    "tweetnacl",
+    "xsalsa20-poly1305"
+  ],
+  "notes": {
+    "tweetnacl": {
+      "version": "^1.0.3",
+      "purpose": "Cryptographically secure encryption (XSalsa20-Poly1305)",
+      "size": "~44KB",
+      "license": "Unlicense"
+    },
+    "tweetnacl-util": {
+      "version": "^0.15.1",
+      "purpose": "Utility functions for TweetNaCl (UTF-8, Base64 encoding)",
+      "size": "~2KB",
+      "license": "Unlicense"
+    },
+    "docx": {
+      "version": "^8.10.0",
+      "purpose": "Generate DOCX (Word) documents",
+      "size": "~150KB",
+      "license": "MIT",
+      "note": "Only needed for DOCX export functionality"
+    },
+    "qrcode": {
+      "version": "^1.5.3",
+      "purpose": "Generate QR codes",
+      "size": "~60KB",
+      "license": "MIT",
+      "note": "Can use CDN version instead (see setup guide)"
+    }
+  },
+  "installation": {
+    "quick": "npm install tweetnacl tweetnacl-util docx qrcode",
+    "individual": [
+      "npm install tweetnacl@^1.0.3",
+      "npm install tweetnacl-util@^0.15.1",
+      "npm install docx@^8.10.0",
+      "npm install qrcode@^1.5.3"
+    ]
+  }
+}
